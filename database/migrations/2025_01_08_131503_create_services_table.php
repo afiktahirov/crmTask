@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('frequency'); // İl, Ay, Həftə, Günlük, Saatlıq
+            $table->decimal('price', 10, 2);
+            $table->enum('interval', ['yearly', 'monthly', 'weekly', 'daily', 'hourly'])->default('daily');
             $table->timestamps();
         });
-        
+
     }
 
     /**

@@ -3,8 +3,9 @@
 @section('content')
 <div class="container">
     <h1>Müştərilər</h1>
-
-    <!-- Axtarış və Filtrlər -->
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+        Yeni Müştəri Əlavə Et
+    </button>
     <form method="GET" action="{{ route('customers.index') }}" class="row mb-4">
         <div class="col-md-4">
             <input type="text" name="search" class="form-control" placeholder="Axtar: Şirkət adı, telefon, email" value="{{ request('search') }}">
@@ -43,8 +44,6 @@
             {{ session('success') }}
         </div>
     @endif
-
-    <!-- Müştəri Siyahısı -->
     <table class="table">
         <thead>
             <tr>

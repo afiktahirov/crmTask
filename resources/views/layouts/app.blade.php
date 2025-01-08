@@ -34,6 +34,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('customers.index') }}">Müştərilər</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('services.index') }}">Xidmətlər</a>
+                    </li>
 
                 </ul>
             </div>
