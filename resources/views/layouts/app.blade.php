@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'CRM Sistemi')</title>
-    <!-- Bootstrap CDN və ya yerli fayl -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Həmişə alt hissədə olan footer */
         html, body {
             height: 100%;
         }
@@ -25,7 +23,6 @@
     </style>
 </head>
 <body>
-    <!-- Naviqasiya Menyusu -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">CRM Sistemi</a>
@@ -37,24 +34,23 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('customers.index') }}">Müştərilər</a>
                     </li>
+
                 </ul>
             </div>
         </div>
     </nav>
-
-    <!-- Əsas Məzmun -->
     <div class="container content mt-4">
         @yield('content')
     </div>
 
-    <!-- Footer -->
     <footer class="text-center py-3 mt-auto">
         <div class="container">
+
             <p class="mb-0">&copy; {{ date('Y') }} CRM Sistemi. Bütün hüquqlar qorunur.</p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

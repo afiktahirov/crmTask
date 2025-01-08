@@ -3,10 +3,40 @@
 @section('content')
 <div class="container">
     <h1>Müştərilər</h1>
-    <!-- Yeni Müştəri Əlavə Et Buttonu -->
-    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
-        Yeni Müştəri Əlavə Et
-    </button>
+
+    <!-- Axtarış və Filtrlər -->
+    <form method="GET" action="{{ route('customers.index') }}" class="row mb-4">
+        <div class="col-md-4">
+            <input type="text" name="search" class="form-control" placeholder="Axtar: Şirkət adı, telefon, email" value="{{ request('search') }}">
+        </div>
+        <div class="col-md-3">
+            <select name="responsible_person" class="form-select">
+                <option value="">Cavabdeh Şəxsə görə</option>
+                @foreach($customers->pluck('responsible_person')->unique() as $responsible_person)
+                    @if($responsible_person)
+                        <option value="{{ $responsible_person }}" {{ request('responsible_person') == $responsible_person ? 'selected' : '' }}>
+                            {{ $responsible_person }}
+                        </option>
+                    @endif
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="position" class="form-select">
+                <option value="">Vəzifəyə görə</option>
+                @foreach($customers->pluck('position')->unique() as $position)
+                    @if($position)
+                        <option value="{{ $position }}" {{ request('position') == $position ? 'selected' : '' }}>
+                            {{ $position }}
+                        </option>
+                    @endif
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Axtar</button>
+        </div>
+    </form>
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -27,7 +57,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($customers as $customer)
+            @forelse($customers as $customer)
             <tr>
                 <td>{{ $customer->company_name }}</td>
                 <td>{{ $customer->phone }}</td>
@@ -43,12 +73,17 @@
                     </form>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="6" class="text-center">Məlumat tapılmadı.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>
 
-<!-- Modal Pəncərə -->
+
+<!-- modal yeri -->
 <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

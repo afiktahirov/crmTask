@@ -10,11 +10,29 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $customers = Customer::all();
+        $query = Customer::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $query->where('company_name', 'like', '%' . $request->search . '%')
+                  ->orWhere('phone', 'like', '%' . $request->search . '%')
+                  ->orWhere('email', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('responsible_person') && $request->responsible_person != '') {
+            $query->where('responsible_person', $request->responsible_person);
+        }
+
+        if ($request->has('position') && $request->position != '') {
+            $query->where('position', $request->position);
+        }
+
+        $customers = $query->get();
+
         return view('customers.index', compact('customers'));
     }
+
 
     /**
      * Show the form for creating a new resource.
