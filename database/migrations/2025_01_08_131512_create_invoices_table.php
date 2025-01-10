@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->foreignId('service_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('service_id');
             $table->decimal('amount', 10, 2);
-            $table->enum('status', ['pending', 'paid', 'cancelled']);
+            $table->enum('status', ['pending', 'paid', 'overdue'])->default('pending');
+            $table->enum('payment_type', ['cash', 'credit_card', 'bank_transfer'])->nullable();
             $table->date('invoice_date');
             $table->date('payment_date')->nullable();
-            $table->string('payment_method')->nullable();
             $table->timestamps();
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
         });
         
     }

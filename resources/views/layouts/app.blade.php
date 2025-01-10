@@ -37,6 +37,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('services.index') }}">Xidmətlər</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('invoices.index') }}">Hesab-fakturalar</a>
+                    </li>
 
                 </ul>
             </div>
