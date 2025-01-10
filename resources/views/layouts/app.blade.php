@@ -40,7 +40,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('invoices.index') }}">Hesab-fakturalar</a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('expenses.index') }}">Xərclər</a>
+                    </li>
                 </ul>
             </div>
         </div>

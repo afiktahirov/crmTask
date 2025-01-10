@@ -64,7 +64,9 @@
                 <td>{{ $customer->responsible_person }}</td>
                 <td>{{ $customer->position }}</td>
                 <td>
-                    <a href="{{ route('customers.edit', $customer->id) }}" class="btn btn-warning">Redaktə Et</a>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editCustomerModal{{ $customer->id }}">
+                        Redaktə Et
+                    </button>
                     <form action="{{ route('customers.destroy', $customer->id) }}" method="POST" style="display: inline;">
                         @csrf
                         @method('DELETE')
@@ -72,6 +74,50 @@
                     </form>
                 </td>
             </tr>
+            <div class="modal fade" id="editCustomerModal{{ $customer->id }}" tabindex="-1" aria-labelledby="editCustomerModalLabel{{ $customer->id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editCustomerModalLabel{{ $customer->id }}">Müştərini Redaktə Et</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{{ route('customers.update', $customer->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="company_name{{ $customer->id }}" class="form-label">Şirkət Adı</label>
+                                    <input type="text" name="company_name" id="company_name{{ $customer->id }}" class="form-control" value="{{ $customer->company_name }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone{{ $customer->id }}" class="form-label">Telefon</label>
+                                    <input type="text" name="phone" id="phone{{ $customer->id }}" class="form-control" value="{{ $customer->phone }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email{{ $customer->id }}" class="form-label">Email</label>
+                                    <input type="email" name="email" id="email{{ $customer->id }}" class="form-control" value="{{ $customer->email }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="responsible_person{{ $customer->id }}" class="form-label">Cavabdeh Şəxs</label>
+                                    <input type="text" name="responsible_person" id="responsible_person{{ $customer->id }}" class="form-control" value="{{ $customer->responsible_person }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="position{{ $customer->id }}" class="form-label">Vəzifə</label>
+                                    <input type="text" name="position" id="position{{ $customer->id }}" class="form-control" value="{{ $customer->position }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="responsible_phone{{ $customer->id }}" class="form-label">Cavabdeh Şəxsin Telefonu</label>
+                                    <input type="text" name="responsible_phone" id="responsible_phone{{ $customer->id }}" class="form-control" value="{{ $customer->responsible_phone }}" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bağla</button>
+                                <button type="submit" class="btn btn-success">Yenilə</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             @empty
             <tr>
                 <td colspan="6" class="text-center">Məlumat tapılmadı.</td>
@@ -80,9 +126,6 @@
         </tbody>
     </table>
 </div>
-
-
-<!-- modal yeri -->
 <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

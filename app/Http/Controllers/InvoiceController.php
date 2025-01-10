@@ -56,16 +56,34 @@ class InvoiceController extends Controller
             'invoice_date' => 'required|date',
         ]);
     
-        Invoice::create([
+        $service = \App\Models\Service::find($validated['service_id']);
+        $price = $service->price;
+        $interval = $service->interval;
+    
+        $now = now();
+        $invoiceDate = \Carbon\Carbon::parse($validated['invoice_date']);
+        $diff = $invoiceDate->diffInDays($now);
+    
+        $dueAmount = match ($interval) {
+            'daily' => $price * $diff,
+            'weekly' => $price * ceil($diff / 7),
+            'monthly' => $price * ceil($diff / 30),
+            'yearly' => $price * ceil($diff / 365),
+            default => $price,
+        };
+    
+        $invoice = \App\Models\Invoice::create([
             'customer_id' => $validated['customer_id'],
             'service_id' => $validated['service_id'],
-            'amount' => $validated['amount'],
+            'amount' => $price,
+            'due_amount' => $dueAmount,
             'invoice_date' => $validated['invoice_date'],
-            'status' => 'pending', 
+            'status' => 'pending',
         ]);
     
-        return redirect()->route('invoices.index')->with('success', 'Hesab-faktura uğurla yaradıldı!');
+        return redirect()->route('invoices.index')->with('success', 'Faktura uğurla yaradıldı!');
     }
+    
 
 
     public function update(Request $request, Invoice $invoice)

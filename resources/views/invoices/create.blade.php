@@ -18,8 +18,10 @@
             <select name="service_id" id="service_id" class="form-select" required>
                 <option value="">Xidmət seçin</option>
                 @foreach($services as $service)
-                    <option value="{{ $service->id }}" data-price="{{ $service->price }}">{{ $service->name }}</option>
-                @endforeach
+                <option value="{{ $service->id }}" data-price="{{ $service->price }}" data-interval="{{ $service->interval }}">
+                    {{ $service->name }}
+                </option>
+                @endforeach            
             </select>
         </div>
         <div class="mb-3">
@@ -28,7 +30,7 @@
         </div>
         <div class="mb-3">
             <label for="invoice_date" class="form-label">Faktura Tarixi</label>
-            <input type="date" name="invoice_date" id="invoice_date" class="form-control" required>
+            <input type="date" name="invoice_date" id="invoice_date" class="form-control" required max="{{ now()->toDateString() }}">
         </div>
         <button type="submit" class="btn btn-primary">Yarat</button>
     </form>
@@ -38,12 +40,55 @@
     document.addEventListener('DOMContentLoaded', function() {
         const serviceSelect = document.getElementById('service_id');
         const amountInput = document.getElementById('amount');
+        const invoiceDateInput = document.getElementById('invoice_date');
+        const dueAmountInput = document.createElement('input'); 
+        dueAmountInput.setAttribute('type', 'text');
+        dueAmountInput.setAttribute('readonly', true);
+        dueAmountInput.setAttribute('id', 'due_amount');
+        dueAmountInput.classList.add('form-control', 'mt-3');
+        amountInput.parentNode.appendChild(dueAmountInput);
 
-        serviceSelect.addEventListener('change', function() {
+        const today = new Date().toISOString().split('T')[0];
+        invoiceDateInput.setAttribute('max', today);
+
+        serviceSelect.addEventListener('change', calculateDueAmount);
+        invoiceDateInput.addEventListener('change', calculateDueAmount);
+
+        function calculateDueAmount() {
             const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-            const price = selectedOption.getAttribute('data-price') || 0;
-            amountInput.value = parseFloat(price).toFixed(2);
-        });
+            const price = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+            const interval = selectedOption.getAttribute('data-interval') || 'daily';
+            const invoiceDate = new Date(invoiceDateInput.value);
+            const today = new Date();
+
+            if (isNaN(invoiceDate.getTime()) || price === 0) {
+                dueAmountInput.value = "0.00";
+                return;
+            }
+
+            const diffTime = Math.abs(today - invoiceDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            let dueAmount = 0;
+            switch (interval) {
+                case 'daily':
+                    dueAmount = price * diffDays;
+                    break;
+                case 'weekly':
+                    dueAmount = price * Math.ceil(diffDays / 7);
+                    break;
+                case 'monthly':
+                    dueAmount = price * Math.ceil(diffDays / 30);
+                    break;
+                case 'yearly':
+                    dueAmount = price * Math.ceil(diffDays / 365);
+                    break;
+                default:
+                    dueAmount = price;
+            }
+
+            dueAmountInput.value = dueAmount.toFixed(2);
+        }
     });
 </script>
 @endsection

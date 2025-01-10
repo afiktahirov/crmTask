@@ -1,7 +1,11 @@
 @extends('layouts.app')
+
 @section('content')
 <div class="container">
     <h1>Hesab-Fakturalar</h1>
+    <a href="{{ route('invoices.create') }}" class="btn btn-primary mb-3">
+        Yeni Faktura Yarat
+    </a>
     <form method="GET" action="{{ route('invoices.index') }}" class="row mb-4">
         <div class="col-md-2">
             <select name="status" class="form-select">
@@ -52,21 +56,25 @@
                 <th>ID</th>
                 <th>Müştəri</th>
                 <th>Xidmət</th>
-                <th>Məbləğ</th>
+                <th>Xidmət Məbləği</th>
                 <th>Status</th>
                 <th>Faktura Tarixi</th>
+                <th>Ümumi Məbləğ</th>
                 <th>Əməliyyatlar</th>
             </tr>
         </thead>
         <tbody>
+            @php $totalAmount = 0; @endphp
             @foreach($invoices as $invoice)
+            @php $totalAmount += $invoice->due_amount; @endphp
             <tr>
                 <td>{{ $invoice->id }}</td>
                 <td>{{ $invoice->customer->company_name }}</td>
                 <td>{{ $invoice->service->name }}</td>
-                <td>{{ $invoice->amount }} AZN</td>
+                <td>{{ number_format($invoice->amount, 2) }} AZN</td>
                 <td>{{ ucfirst($invoice->status) }}</td>
                 <td>{{ $invoice->invoice_date }}</td>
+                <td>{{ number_format($invoice->due_amount, 2) }} AZN</td>
                 <td>
                     @if($invoice->status == 'pending')
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#payInvoiceModal{{ $invoice->id }}">
